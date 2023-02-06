@@ -16,6 +16,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer,CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.cluster import KMeans
 from sklearn.decomposition import TruncatedSVD
+from sklearn.manifold import TSNE
 
 #Topic modelling libraries
 import gensim
