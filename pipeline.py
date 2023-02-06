@@ -82,11 +82,11 @@ class TopicModelling:
         print('Assigned cluster labels! Print dataset variable to see labelled output...')
        
     def cluster_2d_viz(self):
-        tsne = TSNE(n_components=2, verbose=1, perplexity=40, n_iter=250)
+        tsne = TSNE(n_components=2, verbose=1, perplexity=40, n_iter=300)
         labels = self.viz_inputs['labels']
         text_embeddings = self.viz_inputs['text_corpus']
         tsne_results = tsne.fit_transform(text_embeddings)
-        tsne_result = pd.DataFrame({'tsne-2d-one': tsne_pca_results[:, 0], 'tsne-2d-two': tsne_pca_results[:, 1],'label':target})
+        tsne_result = pd.DataFrame({'tsne-2d-one': tsne_results[:, 0], 'tsne-2d-two': tsne_results[:, 1],'label':labels})
         sns.FacetGrid(tsne_result, hue='label', height=6).map(plt.scatter, 'tsne-2d-one', 'tsne-2d-two').add_legend()
         plt.show()
         
