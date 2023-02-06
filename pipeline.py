@@ -82,7 +82,7 @@ class TopicModelling:
         print('Assigned cluster labels! Print dataset variable to see labelled output...')
        
     def cluster_2d_viz(self):
-        tsne = TSNE(n_components=2, verbose=1, perplexity=40, n_iter=100)
+        tsne = TSNE(n_components=2, verbose=1, perplexity=40, n_iter=250)
         labels = self.viz_inputs['labels']
         text_embeddings = self.viz_inputs['text_corpus']
         tsne_results = tsne.fit_transform(text_embeddings)
