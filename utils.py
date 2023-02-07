@@ -26,6 +26,7 @@ def text_prep_func(text):
 
 def get_topic_keywords_yearly(dataset, year, topic):
     inputTuple = dict()
+
     #Get doc_corpus
     reviews = dataset[f'reviews{year}']['prep_review'][dataset[f'reviews{year}']['cluster_label']==topic].tolist()
     cv=CountVectorizer(max_df=0.85, stop_words = set(stopwords.words('english')) )
@@ -33,6 +34,7 @@ def get_topic_keywords_yearly(dataset, year, topic):
     feature_names = cv.get_feature_names()
     tfidf = TfidfTransformer(smooth_idf = True, use_idf = True)
     tfidf_vector = tfidf.fit(word_count_vector)
+
     # Extracting keywords from each review over the topic
     for review in reviews:
         review_vector=tfidf.transform(cv.transform([review]))
@@ -52,7 +54,15 @@ def get_topic_keywords_yearly(dataset, year, topic):
             d[topn_words[i]] = tfidf_val[i]
         for key, value in d.items():
             inputTuple[key] = 1+inputTuple.get(key, 0)
-    # Pick top 50 keywords from overall review corpus
+
+    # Pick top 30 keywords from overall review corpus
     inputTuple = sorted(inputTuple.items(), key=lambda x:x[1], reverse=True)[:30]
     resultDictionary = dict((x, y) for x, y in inputTuple)
     return list(resultDictionary.keys())
+
+def get_topic_keywords(dataset, yearly_data, topic):
+    keywords_yearwise = dict()
+    years = np.sort(dataset['year'].unique())
+    for year in years:
+        keywords_yearwise[year] = get_topic_keywords_yearly(yearly_data, year, topic)
+    return pd.DataFrame.from_dict(dict(keywords_yearwise))
