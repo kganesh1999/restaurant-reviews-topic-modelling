@@ -16,7 +16,6 @@ class TopicModelling:
         self.dictionary = corpora.Dictionary(docs)
 #         self.dictionary.filter_extremes(no_below=5, no_above=0.5)
         self.corpus_vectors = [self.dictionary.doc2bow(doc) for doc in docs]
-        print(len(self.dictionary))
         # Get TFIDF
         if feature_vector_type == 'tfidf':
             tfidf = models.TfidfModel(self.corpus_vectors)
