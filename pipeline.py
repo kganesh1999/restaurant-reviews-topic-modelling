@@ -11,10 +11,12 @@ class TopicModelling:
     def fit_corpus(self, corpus_column, feature_vector_type):
         docs = []
         for doc in self.dataset[corpus_column]:
-            docs.append(doc.split())
+            docs.append(text_prep_func(doc).split())
         #Generate BOW corpus
         self.dictionary = corpora.Dictionary(docs)
+#         self.dictionary.filter_extremes(no_below=5, no_above=0.5)
         self.corpus_vectors = [self.dictionary.doc2bow(doc) for doc in docs]
+        print(len(self.dictionary))
         # Get TFIDF
         if feature_vector_type == 'tfidf':
             tfidf = models.TfidfModel(self.corpus_vectors)
@@ -39,8 +41,14 @@ class TopicModelling:
                 topics_overview[f'Topic{topic_num+1}'].append(top_word[0])
         return pd.DataFrame.from_dict(dict(topics_overview))
     
-#     def assign_topic(self):
-        
+    def assign_topic(self):
+        lda_corpus= self.model[self.corpus_vectors]
+        all_topics = self.model.get_document_topics(self.corpus_vectors)
+        all_topics_csr= gensim.matutils.corpus2csc(all_topics)
+        all_topics_numpy= all_topics_csr.T.toarray()
+        major_topic = [np.argmax(arr) for arr in all_topics_numpy]
+        self.dataset['major_lda_topic']= major_topic
+        print("Topic assigned for all documents :)")
     
     def visualize_topics(self, top_n_words):
         return pyLDAvis.gensim_models.prepare(self.model, self.corpus_vectors, self.dictionary, mds="mmds", R=top_n_words)
@@ -65,6 +73,7 @@ class TopicModelling:
 
             #Generate corpus
             dictionary = corpora.Dictionary(processed_docs)
+            dictionary.filter_extremes(no_below=5, no_above=0.5)
             corpus_vectors = [dictionary.doc2bow(doc) for doc in processed_docs]
             # Get TFIDF
             if self.feature_vector_type == 'tfidf':
@@ -124,7 +133,7 @@ class DocumentClustering:
         self.dataset['cluster_label'] = labels
         self.viz_inputs['corpus_embeddings'] = corpus_svd
         self.viz_inputs['labels'] = labels
-        print('Assigned cluster labels! Print dataset variable to see labelled output...')
+        print('Assigned cluster labels! Print dataset variable to see labelled output :)')
        
     def visualize_clusters(self):
         tsne = TSNE(n_components=2, verbose=0, perplexity=40, n_iter=300)
