@@ -47,7 +47,7 @@ class TopicModelling:
         all_topics_csr= gensim.matutils.corpus2csc(all_topics)
         all_topics_numpy= all_topics_csr.T.toarray()
         major_topic = [np.argmax(arr) for arr in all_topics_numpy]
-        self.dataset['major_lda_topic']= major_topic
+        self.dataset['LDA_topic_assigned']= major_topic
         print("Topic assigned for all documents :)")
     
     def visualize_topics(self, top_n_words):
@@ -130,7 +130,7 @@ class DocumentClustering:
         #Perform clustering with corpus generated
         clf = KMeans(n_clusters=self.n_topics, max_iter=50, init='k-means++', n_init=1)
         labels = clf.fit_predict(corpus_svd)
-        self.dataset['cluster_label'] = labels
+        self.dataset['Cluster_label_assigned'] = labels
         self.viz_inputs['corpus_embeddings'] = corpus_svd
         self.viz_inputs['labels'] = labels
         print('Assigned cluster labels! Print dataset variable to see labelled output :)')
