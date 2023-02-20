@@ -3,6 +3,9 @@
 # Utility functions
 from collections import defaultdict
 from utils import text_prep_func
+from subprocess import check_output
+import math
+import random
 
 # Dataframe libraries
 import pandas as pd
@@ -11,14 +14,16 @@ import re
 
 # Plotting
 import matplotlib.pyplot as plt
+import matplotlib.colors as mcolors
+import matplotlib.patches as mpatches
+from wordcloud import WordCloud, STOPWORDS
 import seaborn as sns; sns.set_style('whitegrid')
 
 # NLP
 from nltk.tokenize.regexp import RegexpTokenizer
-from subprocess import check_output
+from nltk.corpus import stopwords 
 from sklearn.feature_extraction.text import TfidfVectorizer,CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
-from sklearn.cluster import KMeans
 from sklearn.decomposition import TruncatedSVD
 from sklearn.manifold import TSNE
 
