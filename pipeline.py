@@ -1,5 +1,8 @@
 from req_libs import *
 
+# class DocumentClustering:
+#     def __init__(self, dataset, 
+
 
 class TopicModelling:
     def __init__(self, dataset, topic_model=None):
@@ -39,7 +42,8 @@ class TopicModelling:
             top_words = sorted(top_words, key=lambda x: x[1], reverse=True)
             for top_word in top_words:
                 topics_overview[f'Topic{topic_num+1}'].append(top_word[0])
-        return pd.DataFrame.from_dict(dict(topics_overview))
+        for k, v in topics_overview.items():
+            print(k, ": ", " ".join(v))
     
     def format_topics_sentences(self):
         sent_topics_df = pd.DataFrame()
@@ -61,7 +65,7 @@ class TopicModelling:
         all_topics_csr= gensim.matutils.corpus2csc(all_topics)
         all_topics_numpy= all_topics_csr.T.toarray()
         major_topic = [np.argmax(arr) for arr in all_topics_numpy]
-        self.dataset['LDA_topic_assigned']= major_topic
+        self.dataset['Topic_assigned']= major_topic
         print("Topic assigned for all documents :)")
     
     def topics_wordcloud(self, topn=10):        
